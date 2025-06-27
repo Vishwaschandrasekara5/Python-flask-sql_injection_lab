@@ -30,9 +30,14 @@ def login():
         conn = sqlite3.connect('users.db')
         cursor = conn.cursor()
 
-        # Vulnerable SQL query (intentionally shown)
-        query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
-        cursor.execute(query)
+        # Vulnerable SQL query 
+
+        # query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+        # cursor.execute(query)
+
+        #Modify the /login route in app.py: 
+        query = "SELECT * FROM users WHERE username = ? AND password = ?" 
+        cursor.execute(query, (username, password)) 
         user = cursor.fetchone()
         conn.close()
 
@@ -53,8 +58,14 @@ def search():
         cursor = conn.cursor()
 
         # Vulnerable SQL query
-        query = f"SELECT username FROM users WHERE username LIKE '%{search_term}%'"
-        cursor.execute(query)
+
+        # query = f"SELECT username FROM users WHERE username LIKE '%{search_term}%'"
+        # cursor.execute(query)
+
+        # Modify the /search route in app.py:
+
+        query = "SELECT username FROM users WHERE username LIKE ?" 
+        cursor.execute(query, (f'%{search_term}%',))
         results = cursor.fetchall()
         conn.close()
 
